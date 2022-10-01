@@ -15,11 +15,12 @@ double ORIENTATION,ANGLE,SUNORIENTATION,SUNALT;
 /*char *file_path = (char *) "D:/Work/Models/Forest/";*/    /* data folder */
 /*char *file_path = (char *) "Work/Models/Forest";*/ /* Linux data folder */
 std::string file_path;
-std::string file_path_root =  "../data"; /* Linux data folder */
+std::string file_path_root =  "./data"; /* Linux data folder */
 //std::string file_path_root =  "/tmp/forestdata"; /* Linux data folder */
 std::string bmp_file_mainroot =  "Bmp/MainRoot_";    /* tree canopy images */
 std::string bmp_file_cnp =  "Bmp/Canopy_";    /* tree canopy images */
 std::string bmp_file_hgt =  "Bmp/Height_";    /* tree height profile */
+std::string bmp_file_water = "Bmp/Water_";    /* water level images */
 std::string bmp_file_ustorycnp =  "Bmp/UnderstoryCanopy_";    /* tree canopy images */
 std::string bmp_file_ustoryhgt =  "Bmp/UnderstoryHeight_";    /* tree height profile */
 std::string bmp_file_rootstop =  "Bmp/RootsTop_";    /* tree roots */
@@ -73,6 +74,7 @@ struct PIXEL *color;
 
 std::vector< std::vector<struct PIXEL> > bitmap; /* main BITMAP array */
 std::vector< std::vector<struct PIXEL> > bitmap_root; /* root BITMAP array */
+std::vector< std::vector<struct PIXEL> > bitmap_water; /* root BITMAP array */
 
 /* set of preset colors */
 const struct PIXEL pBlack = { 0x00, 0x00, 0x00 };
@@ -121,6 +123,7 @@ int main(int argc, char ** argv) {
     Sim = new Simulation(argc, argv);
     bitmap.resize(Sim->YMAX, std::vector<struct PIXEL>(Sim->XMAX));
     bitmap_root.resize(Sim->YMAX, std::vector<struct PIXEL>(Sim->XMAX));
+    //bitmap_water.resize(Sim->YMAX, std::vector<struct PIXEL>(Sim->XMAX));
     ORIENTATION = Sim->CORIENTATION;
     ANGLE = Sim->CANGLE;
     SUNORIENTATION = Sim->CSUNORIENTATION;
@@ -224,6 +227,9 @@ int main(int argc, char ** argv) {
             
             color_bitmap_hgt();
             save_png(bmp_file_hgt, i);
+
+            color_bitmap_water();
+            save_png(bmp_file_water, i);
 
             //save_png_crowns(i);
             //save_3d(i);
@@ -3489,8 +3495,6 @@ inline int get_sector(int dx, int dy) {
     return sector;
 }
 
-
-
 void color_bitmap_mainroot(void) {       
     /* color the crown */
     int x, y, k;
@@ -3598,6 +3602,33 @@ void color_bitmap_hgt(void)
             }
         }
     }
+}
+
+void color_bitmap_water(void)
+{
+    int x, y, k;
+    double uptake = 0.0;
+    for (x = 0; x < Sim->XMAX; x++) {
+        for (y = 0; y < Sim->YMAX; y++) {
+            uptake = 0.0;
+            for (k=0; k<xyrc[x][y]->claim_nb; k++) {
+                if (xyrc[x][y]->norm_factor > 0) {
+                    uptake += (tree[xyrc[x][y]->trees_i[k]]->water_uptake);
+                }
+            }
+            if (Sim->WATER_AVAILABLE - uptake >= 0){       
+                bitmap[y][x].B = (unsigned char) (255 * (Sim->WATER_AVAILABLE - uptake) / Sim->WATER_AVAILABLE);
+                bitmap[y][x].G = (unsigned char) 0;
+                bitmap[y][x].R = (unsigned char) 0;
+            }
+            else{
+                bitmap[y][x].B = (unsigned char) 0;
+                bitmap[y][x].G = (unsigned char) 0;
+                bitmap[y][x].R = (unsigned char) (255 * (uptake - Sim->WATER_AVAILABLE) / Sim->WATER_AVAILABLE);
+            }
+        }
+    }
+
 }
 
 void color_bitmap_ustory(void) {       

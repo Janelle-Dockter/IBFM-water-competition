@@ -11,9 +11,9 @@ import time
 # the soil aridity ("water_needed") is varied, while the mortality is kept constant
 
 i_range = [2]
-j_range = range(1,21,1)
+j_range = list(range(1,21,1))
 
-#################
+################
 # Change here to launch the simulations with implicit and explicit water modeling:
 #################
 
@@ -44,9 +44,9 @@ for i in i_range:
       time.sleep(1)
       # Wait for available computational resources:
       while (float(popen("mpstat 1 1 | grep 'Average' | awk '{ printf $NF }'").read()) < 5):
-          print "==>", (str(float(popen("mpstat 1 1 | grep 'Average' | awk '{ printf $NF }'").read()))), "<=="
+          print("==>" + str(float(popen("mpstat 1 1 | grep 'Average' | awk '{ printf $NF }'").read())) + "<==")
           time.sleep(35)
-      print "will start a new process", "==>", (str(float(popen("mpstat 1 1 | grep 'Average' | awk '{ printf $NF }'").read()))), "<=="
+      print("will start a new process" + "==>" + (str(float(popen("mpstat 1 1 | grep 'Average' | awk '{ printf $NF }'").read()))) + "<==")
       # argument recoding:
       water_needed = str(j/10.0*3.0) # scaled in [0,6] in C++
       water_mr = str(i/10.0) # scaled in [0,1] in C++
