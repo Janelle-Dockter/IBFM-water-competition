@@ -83,6 +83,7 @@ void measure(void); /* mod_growth.cpp */
 void color_bitmap_mainroot(void); /* mod_pictures.cpp */
 void color_bitmap_cnp(void); /* mod_pictures.cpp */
 void color_bitmap_hgt(void); /* mod_pictures.cpp */
+void color_bitmap_water(void);
 void color_bitmap_ustory(void); /* mod_pictures.cpp */
 void color_bitmap_ustory_hgt(void); /* mod_pictures.cpp */
 void color_bitmap_rootstop(void); /* mod_pictures.cpp */
