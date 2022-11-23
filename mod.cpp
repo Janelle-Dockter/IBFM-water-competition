@@ -3886,7 +3886,7 @@ void save_png_crowns(int file_no) {
         }
     }
 
-    char path[] = "include/SF-Mono-Powerline-Regular.otf";
+    char path[] = "include/cmtt10.ttf";
     char scale[] = "1m";
     image.plot_text(path, 12, 1, total_height - 15, 0, scale, 0.81,0.81,0.81);
 //    image.line(5, total_height - 6, 15, total_height - 6,       0.81,0.81,0.81);
@@ -3914,7 +3914,7 @@ void save_png(std::string file_name, int file_no) {
         }
     }
 
-    char path[] = "include/SF-Mono-Powerline-Regular.otf";
+    char path[] = "include/cmtt10.ttf";
     char scale[] = "1m";
     image.plot_text(path, 12, 10, 10, 0, scale, 1, 1, 1);
     image.line(15, 5, 25, 5,1,1,1);
