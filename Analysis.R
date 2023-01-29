@@ -22,12 +22,15 @@
 
 # If needed, install with:
 install.packages('wordcloud')
+install.packages('Hmisc')
+#install.packages('wordcloud', repos="http://cran.us.r-project.org")
+#install.packages('Hmisc', repos="http://cran.us.r-project.org")
 
 # Source helper functions
 source('Functions.R')
 
 # Also, set an important variable: should we output to pdf?
-to_pdf = FALSE
+to_pdf = TRUE
 
 #  ╔══════════════════════════════╗
 #  ║ STEP 1 - read the data files ║
@@ -87,7 +90,7 @@ for (availability in seq(0.3,6,0.3)) {
 # In these graphs, red dots indicate the available water, form 0.05 (very xeric) to 1 (very mesic/hydric)
 
 if (to_pdf)
-  pdf('implicit_explicit.pdf', width=12, height = 16)
+  pdf('./PDFs/implicit_explicit.pdf', width=12, height = 16)
 par(mfrow=c(4,3))
 for (v in c("POP", "AGE", "BA", "STI_BA", "ASSYM", "CANOPY_RATIO", "UNDER_NB", "OVER_NB", "UNDER_BA", "OVER_BA", "UNDER_AGE", "OVER_AGE")) {
   val = sapply(names(water_1), function(a) {
@@ -99,7 +102,7 @@ for (v in c("POP", "AGE", "BA", "STI_BA", "ASSYM", "CANOPY_RATIO", "UNDER_NB", "
     return(c(m1,m2))
   })
   lim = range(pretty(c(min(val[])*0.75, max(val[])*1.25)))
-  wordcloud::textplot(val[1,], val[2,], as.numeric(names(water_1))/6, show.lines=T, xlab='Explicit Root System', ylab='Implicit Root System', main = v, xlim=lim, ylim=lim, xaxs='i', yaxs='i', las=1, dir=if(v=='ASSYM'){1}else{-1} )
+  textplot(val[1,], val[2,], as.numeric(names(water_1))/6, show.lines=T, xlab='Explicit Root System', ylab='Implicit Root System', main = v, xlim=lim, ylim=lim, xaxs='i', yaxs='i', las=1, dir=if(v=='ASSYM'){1}else{-1} )
   points(lim[1:2], lim[1:2], type='l', lty=2)
 }
 if (to_pdf)
@@ -109,7 +112,7 @@ if (to_pdf)
 # This shows the traces overlayed for implicit/explicit water model
 
 if (to_pdf)
-  pdf('implicit.pdf', width=12, height = 16/4)
+  pdf('./PDFs/implicit.pdf', width=12, height = 16/4)
 par(mfrow=c(1,3))
 require('Hmisc')
 for (v in c('POP','AGE',"BA")) {
@@ -160,7 +163,7 @@ implicit = read.csv('data/implicit_hiresData/Stats.csv', sep='\t')
 shown_range = 1:5000
 
 if (to_pdf)
-  pdf('/media/jean/ext4/forest-ibm/implicit_BA.pdf', width=8, height = 6)
+  pdf('./PDFs/implicit_BA.pdf', width=8, height = 6)
 par(mfrow=c(1,1))
 explicit_ba = explicit$BA[shown_range]
 implicit_ba = implicit$BA[shown_range]
@@ -173,7 +176,7 @@ if (to_pdf)
 
 
 if (to_pdf)
-  pdf('/media/jean/ext4/forest-ibm/implicit_STI.pdf', width=8, height = 6)
+  pdf('./PDFs/implicit_STI.pdf', width=8, height = 6)
 explicit_stiba = explicit$STI_BA[shown_range]
 implicit_stiba = implicit$STI_BA[shown_range]
 plot(implicit_stiba, type='l', lwd=2, col='blue', xlab='Years', ylab="Shade Tolerance Index", bty='n',las=1)
@@ -185,7 +188,7 @@ if (to_pdf)
 
 
 if (to_pdf)
-  pdf('/media/jean/ext4/forest-ibm/implicit_AGE.pdf', width=8, height = 6)
+  pdf('./PDFs/implicit_AGE.pdf', width=8, height = 6)
 explicit_age = explicit$AGE[shown_range]
 implicit_age = implicit$AGE[shown_range]
 plot(implicit_age, type='l', lwd=2, col='blue', xlab='Years', ylab="Mean Age", bty='n',las=1)
@@ -210,7 +213,7 @@ human_name[['WATER_CONSUMED_ABS']] = 'Water consumed by trees'
 human_name[['WATER_NEEDED_ABS']] = 'Water needed by trees'
 
 if (to_pdf)
-  pdf('/media/jean/ext4/forest-ibm/water_consumption.pdf', width=9, height = 6)
+  pdf('./PDFs/water_consumption.pdf', width=9, height = 6)
 par(mfrow=c(2,2),pty='s')
 require('Hmisc')
 for (v in c("WATER_CONSUMED_ABS","WATER_NEEDED_ABS","WATER_CONSUMED","WATER_NEEDED")) {
